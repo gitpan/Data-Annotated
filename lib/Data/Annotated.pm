@@ -14,7 +14,7 @@ Version 0.01
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 my $callbacks = {
                 key_does_not_exist => sub {},
@@ -42,21 +42,19 @@ my $callbacks = {
 
 =head2 new()
 
-    instantiate a new Data::Annotated object;
+instantiate a new Data::Annotated object;
 
 =cut
 
 sub new {
-    my $class = shift;
-    my $self = {};
-    return bless $self, $class;
+    return bless {}, shift;
 }
 
 =head2 annotate($path, \%annotation);
 
-    Annotate a piece of a data structure. The path is an XPath like path like L<Data::Path>
-    uses. The annotation can be any scalar value. Possible uses are String for descriptive
-    text. Or a reference to a more complex data structure.
+Annotate a piece of a data structure. The path is an XPath like path like L<Data::Path>
+uses. The annotation can be any scalar value. Possible uses are String for descriptive
+text. Or a reference to a more complex data structure.
 
 =cut
 
@@ -68,9 +66,9 @@ sub annotate {
 
 =head2 cat_annotation($data)
 
-    spit out the annotations for a data structure. Returns the annotations that apply
-    for the passed in data structures. Does not return an annotation if the data doesn't 
-    contain the data location it is matched to.
+spit out the annotations for a data structure. Returns the annotations that apply
+for the passed in data structures. Does not return an annotation if the data doesn't 
+contain the data location it is matched to.
 
 =cut
 
@@ -81,54 +79,28 @@ sub cat_annotation {
     return map { $self->{$_} } @paths;
 }
 
-=head1 AUTHOR
+=head1 INTERNAL METHODS
 
-Jeremy Wall, C<< <jeremy at marzhillstudios.com> >>
+=head2 _validate_path($path)
 
-=head1 BUGS
+validates a L<Data::Path> path for validity.
 
-Please report any bugs or feature requests to
-C<bug-data-annotated at rt.cpan.org>, or through the web interface at
-L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Data-Annotated>.
-I will be notified, and then you'll automatically be notified of progress on
-your bug as I make changes.
+=cut
+
+sub _validate_path {
+    my ($self, $path) = @_;
+    return 1 if $path =~ qr/^\/.*[^\/]$/;
+    return;
+}
+
+
 
 =head1 TODO
 
-    Should Data::Annotate wrap data? or stay a collection of annotations?
+Should Data::Annotate wrap data? or stay a collection of annotations?
     
-    Make Data::Annotate return the data from a requested path.
-    my $info = $da->get($path, $data) basically just a wrapper around L<Data::Path> get()
-
-=head1 SUPPORT
-
-You can find documentation for this module with the perldoc command.
-
-    perldoc Data::Annotated
-
-You can also look for information at:
-
-=over 4
-
-=item * AnnoCPAN: Annotated CPAN documentation
-
-L<http://annocpan.org/dist/Data-Annotated>
-
-=item * CPAN Ratings
-
-L<http://cpanratings.perl.org/d/Data-Annotated>
-
-=item * RT: CPAN's request tracker
-
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Data-Annotated>
-
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/Data-Annotated>
-
-=back
-
-=head1 ACKNOWLEDGEMENTS
+Make Data::Annotate return the data from a requested path.
+my $info = $da->get($path, $data) basically just a wrapper around L<Data::Path> get()
 
 =head1 COPYRIGHT & LICENSE
 
@@ -137,6 +109,10 @@ Copyright 2007 Jeremy Wall, all rights reserved.
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
 
+=head1 AUTHOR
+
+Jeremy Wall, C<< <jeremy at marzhillstudios.com> >>
+
 =cut
 
-1; # End of Data::Annotated
+1;

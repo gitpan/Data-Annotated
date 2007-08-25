@@ -1,6 +1,6 @@
 ---
 abstract: Data structure Annotation module
-author: 'Jeremy Wall, C<< <jeremy at marzhillstudios.com> >>'
+author: 'Jeremy Wall, all rights reserved.'
 build_requires:
   Test::More: 0.7
 distribution_type: module
@@ -17,4 +17,4 @@ no_index:
 requires:
   Data::Path: 1.0
   perl: 5.6.0
-version: 0.01
+version: 0.02

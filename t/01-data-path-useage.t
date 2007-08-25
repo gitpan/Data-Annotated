@@ -1,7 +1,7 @@
 use Test::More;
 use Data::Annotated;
 
-plan tests =>   8
+plan tests =>   10
             ;
 our $test;
 our $struct = {foo => 'bar'};
@@ -36,3 +36,9 @@ our $da = Data::Annotated->new();
    is_deeply($da->cat_annotation($struct2), ($anno2), 'got annotation for the struct2 after adding'); 
    is_deeply([sort($da->cat_annotation($struct3))], [sort($anno1, $anno2)], 'got annotations for the struct3 after adding'); 
 }
+
+{
+    ok(!$da->_validate_path('foo/bar'), 'Missing root slash does not validate');
+    ok(!$da->_validate_path('/foo/bar/'), 'slash on the end does validate');
+}
+
