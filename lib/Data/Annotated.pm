@@ -14,7 +14,7 @@ Version 0.01
 
 =cut
 
-our $VERSION = '0.02';
+our $VERSION = '0.2';
 
 my $callbacks = {
                 key_does_not_exist => sub {},
@@ -33,7 +33,7 @@ my $callbacks = {
     $da->annotate('/some/other/path', {test => 1, runthis => sub { print 'I was one'; } });
    
     my $struct = {some => {other => {path => 1}}}; 
-    my @annotations = $da->cat_annotations();
+    my @annotations = $da->cat_annotation();
     
     # this will print out "I was one';
     $annotations[0]{runthis}->() if $struct->{some}{other}{path} == $annotations[0]{test};
@@ -60,7 +60,7 @@ text. Or a reference to a more complex data structure.
 
 sub annotate {
     my ($self, $path, $anno) = @_;
-    
+    croak('Not a valid path: '.$path) unless $self->_validate_path($path); 
     $self->{$path} = $anno;
 }
 
@@ -76,7 +76,19 @@ sub cat_annotation {
     my ($self, $data) = @_;
     my $dp = Data::Path->new($data, $callbacks);
     my @paths = grep { $dp->get($_) } keys(%$self);
-    return map { $self->{$_} } @paths;
+    return map { $self->get_annotation($_) } @paths;
+}
+
+=head2 get_annotation($path);
+
+retrieves an annotation keyed by the path in the data structure.
+
+=cut
+
+sub get_annotation {
+    my ($self, $path) = @_;
+    return {path => $_, %{$self->{$path}}} if $self->_validate_path($path);
+    carp('Invalid Path requested: '. $path);
 }
 
 =head1 INTERNAL METHODS

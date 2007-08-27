@@ -16,6 +16,6 @@ MANIFEST			This list of files
 META.yml
 README
 t/00-load.t
-t/01-data-path-useage.t
+t/01-data-annotated-useage.t
 t/pod-coverage.t
 t/pod.t
